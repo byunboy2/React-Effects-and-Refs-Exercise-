@@ -4,8 +4,8 @@ import axios from "axios";
 
 function App() {
   const [deck, setDeck] = useState("");
-  const [card, setCard] = useState({ data: null, isLoading: true });
-  console.log(card.data)
+  const [card, setCard] = useState("");
+
   useEffect(function fetchDeckOfCard() {
     async function fetchDeck() {
       const deckResult = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
@@ -17,13 +17,13 @@ function App() {
   useEffect(function fetchNewCard() {
     async function fetchCard() {
       const drawnCard = await axios.get(`https://deckofcardsapi.com/api/deck/${deck}/draw/?count=1`);
-      setCard({data: drawnCard.data.cards[0], isLoading: false});
+      setCard(drawnCard.data.cards[0].image);
     }
     fetchCard();
-  }, [card]);
+  },[]);
 
   function drawCard() {
-    setCard({ data: card, isLoading: true });
+    setCard(card);
   }
 
   return (
@@ -31,7 +31,7 @@ function App() {
       <button onClick={drawCard}>
         Draw a Card!
       </button>
-      {card.data===undefined ? <p>No More Cards!!!</p> : <img src={`${card.data.image}`} />}
+      {card ?  <img src={`${card}`}/> : <p>No More Cards!!!</p> }
     </div>
   );
 
